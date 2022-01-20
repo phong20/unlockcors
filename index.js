@@ -38,7 +38,7 @@ app.use("/get",
 }),
   router.get("/urlHaveCookie",function(req, res){
     var url = req.originalUrl
-    var urlCors = url.replaceFromZeroTo(136," ")
+    var urlCors = url.replaceFromZeroTo(147," ")
     var urlCookie = url.replaceFromZeroTo(30," ").replace("&url="+urlCors," ").replace(/\s/g,'')
     var query_cookie = `${req.query.query_cookie}`
     axios.get(`${urlCookie}`)
