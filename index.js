@@ -12,13 +12,6 @@ app.use((req, res, next) => {
 String.prototype.replaceAt = function(index, replacement) {
     return this.substr(0, index) + replacement + this.substr(index + replacement.length);
 }
-String.prototype.replaceFromZeroTo = function(index, replacement) {
-    var text = this
-  for (var i = 0;i < index;i++){
-    text = text.replaceAt(i,replacement)
-  }
-  return text.replace(/\s/g,'')
-}
 function isValidHttpUrl(string) {
   let url;
   
@@ -38,8 +31,10 @@ app.use("/get",
 }),
   router.get("/urlHaveCookie",function(req, res){
     var url = req.originalUrl
-    var urlCors = url.replaceFromZeroTo(147," ")
-    var urlCookie = url.replaceFromZeroTo(30," ").replace("&url="+urlCors," ").replace(/\s/g,'')
+    var newUrl = url.replace("/get/urlHaveCookie?cookie_url="," ")
+    var urlArray = newUrl.split("&url=")
+    var urlCookie = urlArray[0]
+    var urlCors = urlArray[1]
     var query_cookie = `${req.query.query_cookie}`
     axios.get(`${urlCookie}`)
       .then(response => {
