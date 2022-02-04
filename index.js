@@ -31,21 +31,31 @@ app.use("/get",
 }),
   router.get("/urlHaveCookie",function(req, res){
     var url = req.originalUrl
-    var newUrl = url.replace("/get/urlHaveCookie?cookie_url="," ")
+    var newUrl = url.replace("/get/urlHaveCookie?cookie="," ")
     var urlArray = newUrl.split("&url=")
-    var urlCookie = urlArray[0]
+    var Cookie = urlArray[0].replace(/\s/g,'')
     var urlCors = urlArray[1]
-    var query_cookie = `${req.query.query_cookie}`
-    axios.get(`${urlCookie}`)
-      .then(response => {
-        const cookie = response.data
-        axios.get(`${urlCors}`,{
+    if(isValidHttpUrl(Cookie)){
+      axios.get(`${Cookie}`)
+        .then(response => {
+          const cookie = response.data
+          axios.get(`${urlCors}`,{
+            headers: {
+              Cookie: `${cookie}`,
+            },
+          })
+            .then(data => res.send(data.data))
+        });
+    }
+    else{
+      axios.get(`${urlCors}`,{
           headers: {
-            Cookie: `${cookie}`,
+            Cookie: `${Cookie}`,
           },
         })
           .then(data => res.send(data.data))
-      });
+    }
+    
 }))
 app.get('*',function(req,res){
   var urlCors = req.originalUrl.replaceAt(0, " ").replace(/\s/g,'')
